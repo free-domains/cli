@@ -21,7 +21,7 @@ npm install @free-domains/cli -g
 
 All of the CLI commands start with `domains`.
 
-> You can also use the alias `free-domains` instead.
+> You can also use the aliases `fd` or `free-domains` instead.
 
 To show the help menu, in your terminal run this command:
 
