@@ -1,17 +1,12 @@
 {
   "name": "@free-domains/cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Register a free subdomain with Free Domains using your command line.",
   "main": "src/index.js",
   "bin": {
     "domains": "src/index.js",
     "free-domains": "src/index.js"
   },
-  "files": [
-    "src/index.js",
-    "src/util",
-    "src/functions"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/free-domains/cli.git"

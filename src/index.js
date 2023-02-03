@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const functions = require("./util/functions");
 
 const cli = require("./util/cli");
