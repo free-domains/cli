@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "bin": {
     "domains": "src/index.js",
-    "fd": "src/index.js"
+    "fd": "src/index.js",
     "free-domains": "src/index.js"
   },
   "repository": {
