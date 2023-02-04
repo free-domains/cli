@@ -13,5 +13,5 @@ module.exports = function account() {
         return;
     }
 
-    console.log(`Username: ${username}\nEmail: ${email}\nToken: ${}`);
+    console.log(`Username: ${username}\nEmail: ${email}\nToken: ${token}`);
 }
