@@ -1,6 +1,7 @@
 const Conf = require("conf");
 const { createOAuthDeviceAuth } = require("@octokit/auth-oauth-device");
 const { Octokit } = require("@octokit/core");
+const prompts = require("prompts");
 
 const account = new Conf();
 
@@ -32,10 +33,33 @@ module.exports = async function login() {
 
     const res2 = await octokit.request("GET /user/emails", {});
 
-    if (res2.data[0].email.endsWith("@users.noreply.github.com")) {
-        account.set("email", res2.data[1].email);
+    const emails = [];
+
+    res2.data.forEach(res => {
+        if(res.email.endsWith("@users.noreply.github.com") || !res.verified) return;
+
+        emails.push(res.email);
+    })
+
+    if(emails.length === 1) {
+        account.set("email", emails[0]);
     } else {
-        account.set("email", res2.data[0].email);
+        const question = {
+            type: "select",
+            name: "email",
+            message: "Which email do you want to use?",
+            choices: []
+        }
+
+        for (const email of emails) {
+            question.choices.push({ value: email });
+        }
+
+        console.log(" ");
+
+        const response = await prompts(question);
+
+        account.set("email", response.email);
     }
 
     console.log(`\nLogged in as: ${account.get("username")} <${account.get("email")}>`);
