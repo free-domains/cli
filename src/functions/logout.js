@@ -1,7 +1,7 @@
 const Conf = require("conf");
 const account = new Conf();
 
-module.exports = function () {
+module.exports = function logout() {
     if(!account.has("username")) {
         console.log("You are not logged in!");
         console.log("To login, run the command: `domains login`")

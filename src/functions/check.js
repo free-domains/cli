@@ -5,7 +5,7 @@ const prompts = require("prompts");
 const account = new Conf();
 const questions = require("../util/questions").check;
 
-module.exports = async function () {
+module.exports = async function check() {
     const username = account.get("username");
 
     const response = await prompts(questions);

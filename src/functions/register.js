@@ -11,7 +11,7 @@ function delay(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
 }
 
-module.exports = async function () {
+module.exports = async function register() {
     if(!account.has("username")) {
         console.log("You are not logged in!");
         console.log("To log in, run the command: `domains login`");
