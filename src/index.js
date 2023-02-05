@@ -18,6 +18,8 @@ const { clear, debug } = flags;
 	input.includes("login") && functions.login();
 	input.includes("logout") && functions.logout();
 	input.includes("register") && functions.register();
+	input.includes("remove") && functions.remove();
+	input.includes("update") && functions.update();
 
 	debug && console.log(flags);
 })();

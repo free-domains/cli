@@ -32,7 +32,9 @@ const commands = {
 	check: { desc: "Check if a subdomain is available." },
 	login: { desc: "Login to your GitHub account." },
 	logout: { desc: "Logout of your GitHub account." },
-	register: { desc: "Register a domain." }
+	register: { desc: "Register a subdomain." },
+	remove: { desc: "Remove your subdomain." },
+	update: { desc: "Update your subdomain." }
 }
 
 const helpText = meowHelp({

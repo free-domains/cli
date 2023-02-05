@@ -5,13 +5,13 @@ const { Octokit } = require("@octokit/core");
 const prompts = require("prompts");
 
 const account = new Conf();
-const questions = require("../util/questions").register;
+const questions = require("../util/questions").update;
 
 function delay(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
 }
 
-module.exports = async function register() {
+module.exports = async function update() {
     if(!account.has("username")) {
         console.log("You are not logged in!");
         console.log("To log in, run the command: `domains login`");
@@ -84,26 +84,33 @@ const fullContent = `{
             },
         }
     ).then(async (res) => {
-        if(res.status && res.status == 404) {
+        if(res.status && res.status == 200) {
+            const file = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
+                owner: "free-domains",
+                repo: "register",
+                path: "domains/" + subdomain + "." + domain + ".json"
+            })
+
             octokit
                 .request("PUT /repos/{owner}/{repo}/contents/{path}", {
                     owner: username,
                     repo: forkName,
                     path: "domains/" + subdomain + "." + domain + ".json",
-                    message: `feat(domain): add \`${subdomain}.${domain}\``,
-                    content: contentEncoded
+                    message: `feat(domain): update \`${subdomain}.${domain}\``,
+                    content: contentEncoded,
+                    sha: file.data.sha
                 })
                 .catch((err) => { throw new Error(err); });
-        } else throw new Error("That subdomain is taken!");
+        } else throw new Error("That subdomain does not exist!");
     })
 
-    await delay(1000);
+    await delay(2000);
 
     const res = await octokit.request("POST /repos/{owner}/{repo}/pulls", {
         owner: "free-domains",
         repo: "register",
-        title: `Register ${subdomain}.${domain}`,
-        body:  `Added \`${subdomain}.${domain}\` using the [CLI](https://cli.freesubdomains.org).`,
+        title: `Update ${subdomain}.${domain}`,
+        body:  `Updated \`${subdomain}.${domain}\` using the [CLI](https://cli.freesubdomains.org).`,
         head: username + ":main",
         base: "main"
     })

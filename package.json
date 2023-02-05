@@ -1,6 +1,6 @@
 {
   "name": "@free-domains/cli",
-  "version": "1.0.8",
+  "version": "1.1.0",
   "description": "Register a free subdomain with Free Domains using your command line.",
   "main": "src/index.js",
   "bin": {
@@ -35,5 +35,6 @@
     "meow": "^9.0.0",
     "node-fetch": "^2.6.7",
     "prompts": "^2.4.2"
-  }
+  },
+  "devDependencies": {}
 }
