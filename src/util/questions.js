@@ -112,7 +112,8 @@ const update = [
         choices: [
             { value: "A" },
             { value: "AAAA" },
-            { value: "CNAME" }
+            { value: "CNAME" },
+            { value: "TXT" }
         ]
     },
 
