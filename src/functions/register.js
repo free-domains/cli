@@ -47,7 +47,7 @@ module.exports = async function register() {
     let recordValue = response.record_value.toLowerCase();
     const proxyStatus = response.proxy_state;
 
-    if (recordType === "A" || recordType === "AAAA") {
+    if(recordType === "A" || recordType === "AAAA") {
         recordValue = JSON.stringify(recordValue.split(",").map((s) => s.trim()));
     } else {
         recordValue = `"${recordValue.trim()}."`;
@@ -55,7 +55,18 @@ module.exports = async function register() {
 
     let record = `"${recordType}": ${recordValue}`;
 
-const fullContent = `{
+    if(recordType === "TXT") {
+        recordValue = `"${response.record_value.toLowerCase()}"`;
+
+record = `"${recordType}": [
+            {
+                "name": "@",
+                "value": ${recordValue.trim()}
+            }
+        ]`
+    }
+
+let fullContent = `{
     "$schema": "../schemas/domain.json",
 
     "domain": "${domain}",
@@ -99,7 +110,7 @@ const fullContent = `{
 
     await delay(1000);
 
-    const res = await octokit.request("POST /repos/{owner}/{repo}/pulls", {
+    const pr = await octokit.request("POST /repos/{owner}/{repo}/pulls", {
         owner: "free-domains",
         repo: "register",
         title: `Register ${subdomain}.${domain}`,
@@ -108,6 +119,5 @@ const fullContent = `{
         base: "main"
     })
 
-    console.log("\nYour pull request has been submitted.");
-    console.log("You can check the status of your pull request here: " + res.data.html_url);
+    console.log(`\nYour pull request has been submitted.\nYou can check the status of your pull request here: ${pr.data.html_url}`);
 }

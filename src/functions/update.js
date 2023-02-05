@@ -47,7 +47,7 @@ module.exports = async function update() {
     let recordValue = response.record_value.toLowerCase();
     const proxyStatus = response.proxy_state;
 
-    if (recordType === "A" || recordType === "AAAA") {
+    if(recordType === "A" || recordType === "AAAA") {
         recordValue = JSON.stringify(recordValue.split(",").map((s) => s.trim()));
     } else {
         recordValue = `"${recordValue.trim()}."`;
@@ -106,7 +106,7 @@ const fullContent = `{
 
     await delay(2000);
 
-    const res = await octokit.request("POST /repos/{owner}/{repo}/pulls", {
+    const pr = await octokit.request("POST /repos/{owner}/{repo}/pulls", {
         owner: "free-domains",
         repo: "register",
         title: `Update ${subdomain}.${domain}`,
@@ -115,6 +115,5 @@ const fullContent = `{
         base: "main"
     })
 
-    console.log("\nYour pull request has been submitted.");
-    console.log("You can check the status of your pull request here: " + res.data.html_url);
+    console.log(`\nYour pull request has been submitted.\nYou can check the status of your pull request here: ${pr.data.html_url}`);
 }
