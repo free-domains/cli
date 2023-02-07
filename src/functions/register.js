@@ -108,7 +108,7 @@ let fullContent = `{
         } else throw new Error("That subdomain is taken!");
     })
 
-    await delay(1000);
+    await delay(2000);
 
     const pr = await octokit.request("POST /repos/{owner}/{repo}/pulls", {
         owner: "free-domains",
