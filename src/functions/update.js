@@ -50,7 +50,7 @@ module.exports = async function update() {
     if(recordType === "A" || recordType === "AAAA") {
         recordValue = JSON.stringify(recordValue.split(",").map((s) => s.trim()));
     } else {
-        recordValue = `"${recordValue.trim()}."`;
+        recordValue = `"${recordValue.trim()}"`;
     }
 
     let record = `"${recordType}": ${recordValue}`;
