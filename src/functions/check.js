@@ -18,8 +18,8 @@ module.exports = async function check() {
         {
             method: "GET",
             headers: {
-                "User-Agent": username,
-            },
+                "User-Agent": username
+            }
         }
     ).then(async (res) => {
         if(res.status && res.status == 404) {
