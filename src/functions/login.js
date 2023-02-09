@@ -16,7 +16,7 @@ module.exports = async function login() {
         clientType: "oauth-app",
         clientId: "767f7b97e8c3e5ac4c46",
         scopes: ["public_repo, user:email"],
-        onVerification(verification) {      
+        onVerification(verification) {
             console.log("Open the URL: %s", verification.verification_uri);
             console.log("Enter code: %s", verification.user_code);
         }
