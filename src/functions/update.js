@@ -55,17 +55,6 @@ module.exports = async function update() {
 
     let record = `"${recordType}": ${recordValue}`;
 
-    if(recordType === "TXT") {
-        recordValue = `"${response.record_value.toLowerCase()}"`;
-
-record = `"${recordType}": [
-            {
-                "name": "@",
-                "value": ${recordValue.trim()}
-            }
-        ]`
-    }
-
 const fullContent = `{
     "$schema": "../schemas/domain.json",
 

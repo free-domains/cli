@@ -40,8 +40,7 @@ const register = [
         choices: [
             { value: "A" },
             { value: "AAAA" },
-            { value: "CNAME" },
-            { value: "TXT" }
+            { value: "CNAME" }
         ]
     },
 
@@ -112,8 +111,7 @@ const update = [
         choices: [
             { value: "A" },
             { value: "AAAA" },
-            { value: "CNAME" },
-            { value: "TXT" }
+            { value: "CNAME" }
         ]
     },
 
