@@ -5,7 +5,8 @@ const check = [
         message: "What domain do you want to check?",
         choices: [
             { value: "is-a-backend.dev" },
-            { value: "is-a-frontend.dev" }
+            { value: "is-a-frontend.dev" },
+            { value: "is-a-fullstack.dev" }
         ]
     },
 
@@ -23,7 +24,8 @@ const register = [
         message: "What domain do you want your subdomain to use?",
         choices: [
             { value: "is-a-backend.dev" },
-            { value: "is-a-frontend.dev" }
+            { value: "is-a-frontend.dev" },
+            { value: "is-a-fullstack.dev" }
         ]
     },
 
@@ -55,7 +57,7 @@ const register = [
         name: "proxy_state",
         message: "Should the record be proxied through Cloudflare?",
         choices: [
-            { title: "No", value: "false" },
+            { title: "No (recommended)", value: "false" },
             { title: "Yes", value: "true" }
         ]
     }
@@ -68,7 +70,8 @@ const remove = [
         message: "What domain does your subdomain use?",
         choices: [
             { value: "is-a-backend.dev" },
-            { value: "is-a-frontend.dev" }
+            { value: "is-a-frontend.dev" },
+            { value: "is-a-fullstack.dev" }
         ]
     },
 
@@ -94,7 +97,8 @@ const update = [
         message: "What domain does your subdomain use?",
         choices: [
             { value: "is-a-backend.dev" },
-            { value: "is-a-frontend.dev" }
+            { value: "is-a-frontend.dev" },
+            { value: "is-a-fullstack.dev" }
         ]
     },
 
@@ -126,7 +130,7 @@ const update = [
         name: "proxy_state",
         message: "Should the record be proxied through Cloudflare?",
         choices: [
-            { title: "No", value: "false" },
+            { title: "No (recommended)", value: "false" },
             { title: "Yes", value: "true" }
         ]
     }
