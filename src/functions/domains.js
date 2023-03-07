@@ -1,5 +1,5 @@
+const axios = require("axios");
 const Conf = require("conf");
-const fetch = require("node-fetch");
 
 const account = new Conf();
 
@@ -15,12 +15,12 @@ module.exports = async function domains() {
 
     const email = account.get("email");
 
-    const res = await fetch(`https://api.freesubdomains.org/lookup/user?email=${email}`);
+    const res = await axios.get(`https://api.freesubdomains.org/lookup/user?email=${email}`);
 
     if(res.status === 500) return console.log("An error occurred, please try again later.");
     if(res.status === 404) return console.log("You do not own any domains.");
 
-    const domains = res.subdomains;
+    const domains = res.data.subdomains;
 
     return console.log(`Your Domains:\n${domains.join("\n")}`);
 }
