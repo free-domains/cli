@@ -56,8 +56,6 @@ module.exports = async function register() {
     let record = `"${recordType}": ${recordValue}`;
 
 let fullContent = `{
-    "$schema": "../schemas/domain.json",
-
     "domain": "${domain}",
     "subdomain": "${subdomain}",
 
