@@ -1,7 +1,6 @@
 const axios = require("axios");
 const { Base64 } = require("js-base64");
 const Conf = require("conf");
-const fetch = require("node-fetch");
 const { Octokit } = require("@octokit/core");
 const prompts = require("prompts");
 

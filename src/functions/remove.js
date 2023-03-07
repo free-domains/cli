@@ -1,5 +1,5 @@
+const axios = require("axios");
 const Conf = require("conf");
-const fetch = require("node-fetch");
 const { Octokit } = require("@octokit/core");
 const prompts = require("prompts");
 
