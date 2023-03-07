@@ -1,3 +1,4 @@
+const axios = require("axios");
 const { Base64 } = require("js-base64");
 const Conf = require("conf");
 const fetch = require("node-fetch");
@@ -30,6 +31,20 @@ module.exports = async function update() {
 
     const response = await prompts(questions);
 
+    const domain = response.domain;
+    const subdomain = response.subdomain.toLowerCase();
+    const recordType = response.record;
+    let recordValue = response.record_value.toLowerCase();
+    const proxyStatus = response.proxy_state;
+
+    const checkRes = await axios.get(`https://api.freesubdomains.org/check?domain=${subdomain}.${domain}`);
+
+    if(checkRes.status === 500) return console.log("An error occurred, please try again later.");
+
+    const message = checkRes.data.message;
+
+    if(message === "DOMAIN_AVAILABLE") return console.log("\nThat subdomain does not exist!");
+
     let forkName;
 
     await octokit.request("POST /repos/{owner}/{repo}/forks", {
@@ -40,12 +55,6 @@ module.exports = async function update() {
 
     const username = account.get("username");
     const email = account.get("email");
-
-    const domain = response.domain;
-    const subdomain = response.subdomain.toLowerCase();
-    const recordType = response.record;
-    let recordValue = response.record_value.toLowerCase();
-    const proxyStatus = response.proxy_state;
 
     if(recordType === "A" || recordType === "AAAA") {
         recordValue = JSON.stringify(recordValue.split(",").map((s) => s.trim()));
@@ -71,36 +80,27 @@ const fullContent = `{
 }
 `;
 
+    const lookupRes = await axios.get(`https://api.freesubdomains.org/lookup/domain?domain=${subdomain}.${domain}`);
+
+    if(lookupRes.status === 500) return console.log("An error occurred, please try again later.");
+    if(lookupRes.data.owner.email.replace(" (at) ", "@") !== email) return console.log("You do not own that domain!");
+
     const contentEncoded = Base64.encode(fullContent);
 
-    fetch(
-        `https://api.github.com/repos/free-domains/register/contents/domains/${subdomain}.${domain}.json`,
-        {
-            method: "GET",
-            headers: {
-                "User-Agent": username,
-            },
-        }
-    ).then(async (res) => {
-        if(res.status && res.status == 200) {
-            const file = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
-                owner: "free-domains",
-                repo: "register",
-                path: "domains/" + subdomain + "." + domain + ".json"
-            })
-
-            octokit
-                .request("PUT /repos/{owner}/{repo}/contents/{path}", {
-                    owner: username,
-                    repo: forkName,
-                    path: "domains/" + subdomain + "." + domain + ".json",
-                    message: `feat(domain): update \`${subdomain}.${domain}\``,
-                    content: contentEncoded,
-                    sha: file.data.sha
-                })
-                .catch((err) => { throw new Error(err); });
-        } else throw new Error("That subdomain does not exist!");
+    const file = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
+        owner: "free-domains",
+        repo: "register",
+        path: "domains/" + subdomain + "." + domain + ".json"
     })
+
+    await octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", {
+        owner: username,
+        repo: forkName,
+        path: "domains/" + subdomain + "." + domain + ".json",
+        message: `feat(domain): update \`${subdomain}.${domain}\``,
+        content: contentEncoded,
+        sha: file.data.sha
+    }).catch((err) => { throw new Error(err); });
 
     await delay(2000);
 

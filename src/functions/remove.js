@@ -24,6 +24,18 @@ module.exports = async function remove() {
 
     const response = await prompts(questions);
 
+    const domain = response.domain;
+    const subdomain = response.subdomain.toLowerCase();
+    const confirmation = response.confirmation;
+
+    const checkRes = await axios.get(`https://api.freesubdomains.org/check?domain=${subdomain}.${domain}`);
+
+    if(checkRes.status === 500) return console.log("An error occurred, please try again later.");
+
+    const message = checkRes.data.message;
+
+    if(message === "DOMAIN_AVAILABLE") return console.log("\nThat subdomain does not exist!");
+
     let forkName;
 
     await octokit.request("POST /repos/{owner}/{repo}/forks", {
@@ -34,39 +46,26 @@ module.exports = async function remove() {
 
     const username = account.get("username");
 
-    const domain = response.domain;
-    const subdomain = response.subdomain.toLowerCase();
-    const confirmation = response.confirmation;
-
     if(!confirmation) return;
 
-    fetch(
-        `https://api.github.com/repos/free-domains/register/contents/domains/${subdomain}.${domain}.json`,
-        {
-            method: "GET",
-            headers: {
-                "User-Agent": username,
-            },
-        }
-    ).then(async (res) => {
-        if(res.status && res.status == 200) {
-            const file = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
-                owner: "free-domains",
-                repo: "register",
-                path: "domains/" + subdomain + "." + domain + ".json"
-            })
+    const lookupRes = await axios.get(`https://api.freesubdomains.org/lookup/domain?domain=${subdomain}.${domain}`);
 
-            octokit
-                .request("DELETE /repos/{owner}/{repo}/contents/{path}", {
-                    owner: username,
-                    repo: forkName,
-                    path: "domains/" + subdomain + "." + domain + ".json",
-                    message: `chore(domain): remove \`${subdomain}.${domain}\``,
-                    sha: file.data.sha
-                })
-                .catch((err) => { throw new Error(err); });
-        } else throw new Error("That subdomain does not exist!");
+    if(lookupRes.status === 500) return console.log("An error occurred, please try again later.");
+    if(lookupRes.data.owner.email.replace(" (at) ", "@") !== email) return console.log("You do not own that domain!");
+
+    const file = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
+        owner: "free-domains",
+        repo: "register",
+        path: "domains/" + subdomain + "." + domain + ".json"
     })
+
+    await octokit.request("DELETE /repos/{owner}/{repo}/contents/{path}", {
+        owner: username,
+        repo: forkName,
+        path: "domains/" + subdomain + "." + domain + ".json",
+        message: `chore(domain): remove \`${subdomain}.${domain}\``,
+        sha: file.data.sha
+    }).catch((err) => { throw new Error(err); });
 
     await delay(2000);
 

@@ -30,6 +30,20 @@ module.exports = async function register() {
 
     const response = await prompts(questions);
 
+    const domain = response.domain;
+    const subdomain = response.subdomain.toLowerCase();
+    const recordType = response.record;
+    let recordValue = response.record_value.toLowerCase();
+    const proxyStatus = response.proxy_state;
+
+    const checkRes = await axios.get(`https://api.freesubdomains.org/check?domain=${subdomain}.${domain}`);
+
+    if(checkRes.status === 500) return console.log("An error occurred, please try again later.");
+
+    const message = checkRes.data.message;
+
+    if(message === "DOMAIN_UNAVAILABLE") return console.log("\nSorry, that subdomain is taken!");
+
     let forkName;
 
     await octokit.request("POST /repos/{owner}/{repo}/forks", {
@@ -40,12 +54,6 @@ module.exports = async function register() {
 
     const username = account.get("username");
     const email = account.get("email");
-
-    const domain = response.domain;
-    const subdomain = response.subdomain.toLowerCase();
-    const recordType = response.record;
-    let recordValue = response.record_value.toLowerCase();
-    const proxyStatus = response.proxy_state;
 
     if(recordType === "A" || recordType === "AAAA") {
         recordValue = JSON.stringify(recordValue.split(",").map((s) => s.trim()));
@@ -73,27 +81,13 @@ let fullContent = `{
 
     const contentEncoded = Base64.encode(fullContent);
 
-    fetch(
-        `https://api.github.com/repos/free-domains/register/contents/domains/${subdomain}.${domain}.json`,
-        {
-            method: "GET",
-            headers: {
-                "User-Agent": username,
-            },
-        }
-    ).then(async (res) => {
-        if(res.status && res.status == 404) {
-            octokit
-                .request("PUT /repos/{owner}/{repo}/contents/{path}", {
-                    owner: username,
-                    repo: forkName,
-                    path: "domains/" + subdomain + "." + domain + ".json",
-                    message: `feat(domain): add \`${subdomain}.${domain}\``,
-                    content: contentEncoded
-                })
-                .catch((err) => { throw new Error(err); });
-        } else throw new Error("That subdomain is taken!");
-    })
+    await octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", {
+        owner: username,
+        repo: forkName,
+        path: "domains/" + subdomain + "." + domain + ".json",
+        message: `feat(domain): add \`${subdomain}.${domain}\``,
+        content: contentEncoded
+    }).catch((err) => { throw new Error(err); });
 
     await delay(2000);
 
