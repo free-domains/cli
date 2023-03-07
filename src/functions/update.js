@@ -56,8 +56,6 @@ module.exports = async function update() {
     let record = `"${recordType}": ${recordValue}`;
 
 const fullContent = `{
-    "$schema": "../schemas/domain.json",
-
     "domain": "${domain}",
     "subdomain": "${subdomain}",
 
