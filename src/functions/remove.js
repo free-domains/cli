@@ -17,8 +17,11 @@ module.exports = async function remove() {
         return;
     }
 
-    console.log(`Username: ${account.get("username")}`);
-    console.log(`Email: ${account.get("email")}\n`);
+    const username = account.get("username");
+    const email = account.get("email");
+
+    console.log(`Username: ${username}`);
+    console.log(`Email: ${email}\n`);
 
     const octokit = new Octokit({ auth: account.get("token") });
 
@@ -28,13 +31,31 @@ module.exports = async function remove() {
     const subdomain = response.subdomain.toLowerCase();
     const confirmation = response.confirmation;
 
-    const checkRes = await axios.get(`https://api.freesubdomains.org/check?domain=${subdomain}.${domain}`);
+    let checkRes;
 
-    if(checkRes.status === 500) return console.log("An error occurred, please try again later.");
+    try {
+        const result = await axios.get(`https://api.freesubdomains.org/check?domain=${subdomain}.${domain}`);
 
-    const message = checkRes.data.message;
+        checkRes = result.data;
+    } catch(err) {
+        checkRes = err.response;
+    }
 
-    if(message === "DOMAIN_AVAILABLE") return console.log("\nThat subdomain does not exist!");
+    if(checkRes.status === 500) return console.log("\nAn error occurred, please try again later.");
+    if(checkRes.message === "DOMAIN_AVAILABLE") return console.log("\nThat subdomain does not exist!");
+
+    let lookupRes;
+
+    try {
+        const result = await axios.get(`https://api.freesubdomains.org/lookup/domain?domain=${subdomain}.${domain}`);
+
+        lookupRes = result.data;
+    } catch(err) {
+        lookupRes = err.response;
+    }
+
+    if(lookupRes.status === 500) return console.log("\nAn error occurred, please try again later.");
+    if(lookupRes.owner.email.replace(" (at) ", "@") !== email) return console.log("\nYou do not own that domain!");
 
     let forkName;
 
@@ -44,14 +65,7 @@ module.exports = async function remove() {
         default_branch_only: true
     }).then(res => forkName = res.data.name)
 
-    const username = account.get("username");
-
     if(!confirmation) return;
-
-    const lookupRes = await axios.get(`https://api.freesubdomains.org/lookup/domain?domain=${subdomain}.${domain}`);
-
-    if(lookupRes.status === 500) return console.log("An error occurred, please try again later.");
-    if(lookupRes.data.owner.email.replace(" (at) ", "@") !== email) return console.log("You do not own that domain!");
 
     const file = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
         owner: "free-domains",
@@ -65,7 +79,7 @@ module.exports = async function remove() {
         path: "domains/" + subdomain + "." + domain + ".json",
         message: `chore(domain): remove \`${subdomain}.${domain}\``,
         sha: file.data.sha
-    }).catch((err) => { throw new Error(err); });
+    }).catch((err) => { throw new Error(err); })
 
     await delay(2000);
 

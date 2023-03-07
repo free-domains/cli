@@ -18,8 +18,11 @@ module.exports = async function register() {
         return;
     }
 
-    console.log(`Username: ${account.get("username")}`);
-    console.log(`Email: ${account.get("email")}\n`);
+    const username = account.get("username");
+    const email = account.get("email");
+
+    console.log(`Username: ${username}`);
+    console.log(`Email: ${email}\n`);
 
     const octokit = new Octokit({ auth: account.get("token") });
 
@@ -36,13 +39,18 @@ module.exports = async function register() {
     let recordValue = response.record_value.toLowerCase();
     const proxyStatus = response.proxy_state;
 
-    const checkRes = await axios.get(`https://api.freesubdomains.org/check?domain=${subdomain}.${domain}`);
+    let checkRes;
 
-    if(checkRes.status === 500) return console.log("An error occurred, please try again later.");
+    try {
+        const result = await axios.get(`https://api.freesubdomains.org/check?domain=${subdomain}.${domain}`);
 
-    const message = checkRes.data.message;
+        checkRes = result.data;
+    } catch(err) {
+        checkRes = err.response;
+    }
 
-    if(message === "DOMAIN_UNAVAILABLE") return console.log("\nSorry, that subdomain is taken!");
+    if(checkRes.status === 500) return console.log("\nAn error occurred, please try again later.");
+    if(checkRes.message === "DOMAIN_UNAVAILABLE") return console.log("\nSorry, that subdomain is taken!");
 
     let forkName;
 
@@ -51,9 +59,6 @@ module.exports = async function register() {
         repo: "register",
         default_branch_only: true
     }).then(res => forkName = res.data.name)
-
-    const username = account.get("username");
-    const email = account.get("email");
 
     if(recordType === "A" || recordType === "AAAA") {
         recordValue = JSON.stringify(recordValue.split(",").map((s) => s.trim()));
@@ -87,7 +92,7 @@ let fullContent = `{
         path: "domains/" + subdomain + "." + domain + ".json",
         message: `feat(domain): add \`${subdomain}.${domain}\``,
         content: contentEncoded
-    }).catch((err) => { throw new Error(err); });
+    }).catch((err) => { throw new Error(err); })
 
     await delay(2000);
 
