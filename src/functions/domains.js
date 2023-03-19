@@ -15,7 +15,15 @@ module.exports = async function domains() {
 
     const email = account.get("email");
 
-    const res = await axios.get(`https://api.freesubdomains.org/lookup/user?email=${email}`);
+    let res;
+
+    try {
+        const request = await axios.get(`https://api.freesubdomains.org/lookup/user?email=${email}`);
+
+        res = request;
+    } catch(err) {
+        res = err.response;
+    }
 
     if(res.status === 500) return console.log("An error occurred, please try again later.");
     if(res.status === 404) return console.log("You do not own any domains.");
