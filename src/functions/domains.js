@@ -30,5 +30,5 @@ module.exports = async function domains() {
 
     const domains = res.data.subdomains;
 
-    return console.log(`Your Domains:\n${domains.join("\n")}`);
+    return console.log(domains.join("\n"));
 }
