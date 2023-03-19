@@ -11,7 +11,15 @@ module.exports = async function check() {
     const domain = response.domain;
     const subdomain = response.subdomain.toLowerCase();
 
-    const res = await axios.get(`https://api.freesubdomains.org/check?domain=${subdomain}.${domain}`);
+    let res;
+
+    try {
+        const request = await axios.get(`https://api.freesubdomains.org/check?domain=${subdomain}.${domain}`);
+
+        res = request;
+    } catch(err) {
+        res = err.response;
+    }
 
     if(res.status === 500) return console.log("An error occurred, please try again later.");
 
