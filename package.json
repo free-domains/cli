@@ -1,6 +1,6 @@
 {
   "name": "@free-domains/cli",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Register a free subdomain with Free Domains using your command line.",
   "main": "src/index.js",
   "bin": {
