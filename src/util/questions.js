@@ -4,8 +4,6 @@ const check = [
         name: "domain",
         message: "What domain do you want to check?",
         choices: [
-            { value: "is-a-backend.dev" },
-            { value: "is-a-frontend.dev" },
             { value: "is-a-fullstack.dev" }
         ]
     },
@@ -23,8 +21,6 @@ const register = [
         name: "domain",
         message: "What domain do you want your subdomain to use?",
         choices: [
-            { value: "is-a-backend.dev" },
-            { value: "is-a-frontend.dev" },
             { value: "is-a-fullstack.dev" }
         ]
     },
@@ -88,16 +84,12 @@ const remove = [
     }
 ]
 
-
-
 const update = [
     {
         type: "select",
         name: "domain",
         message: "What domain does your subdomain use?",
         choices: [
-            { value: "is-a-backend.dev" },
-            { value: "is-a-frontend.dev" },
             { value: "is-a-fullstack.dev" }
         ]
     },
