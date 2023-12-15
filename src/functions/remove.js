@@ -34,7 +34,7 @@ module.exports = async function remove() {
     let checkRes;
 
     try {
-        const result = await axios.get(`https://api.freesubdomains.org/check?domain=${subdomain}.${domain}`);
+        const result = await axios.get(`https://free-domains-api.wdh.gg/check?domain=${subdomain}.${domain}`);
 
         checkRes = result.data;
     } catch(err) {
@@ -47,7 +47,7 @@ module.exports = async function remove() {
     let lookupRes;
 
     try {
-        const result = await axios.get(`https://api.freesubdomains.org/lookup/domain?domain=${subdomain}.${domain}`);
+        const result = await axios.get(`https://free-domains-api.wdh.gg/lookup/domain?domain=${subdomain}.${domain}`);
 
         lookupRes = result.data;
     } catch(err) {
@@ -87,7 +87,7 @@ module.exports = async function remove() {
         owner: "free-domains",
         repo: "register",
         title: `Remove ${subdomain}.${domain}`,
-        body:  `Removed \`${subdomain}.${domain}\` using the [CLI](https://cli.freesubdomains.org).`,
+        body:  `Removed \`${subdomain}.${domain}\` using the [CLI](https://www.npmjs.com/package/@free-domains/cli).`,
         head: username + ":main",
         base: "main"
     })

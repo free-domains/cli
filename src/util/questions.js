@@ -65,8 +65,6 @@ const remove = [
         name: "domain",
         message: "What domain does your subdomain use?",
         choices: [
-            { value: "is-a-backend.dev" },
-            { value: "is-a-frontend.dev" },
             { value: "is-a-fullstack.dev" }
         ]
     },

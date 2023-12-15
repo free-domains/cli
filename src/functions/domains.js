@@ -18,7 +18,7 @@ module.exports = async function domains() {
     let res;
 
     try {
-        const request = await axios.get(`https://api.freesubdomains.org/lookup/user?email=${email}`);
+        const request = await axios.get(`https://free-domains-api.wdh.gg/lookup/user?email=${email}`);
 
         res = request;
     } catch(err) {

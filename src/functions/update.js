@@ -42,7 +42,7 @@ module.exports = async function update() {
     let checkRes;
 
     try {
-        const result = await axios.get(`https://api.freesubdomains.org/check?domain=${subdomain}.${domain}`);
+        const result = await axios.get(`https://free-domains-api.wdh.gg/check?domain=${subdomain}.${domain}`);
 
         checkRes = result.data;
     } catch(err) {
@@ -55,7 +55,7 @@ module.exports = async function update() {
     let lookupRes;
 
     try {
-        const result = await axios.get(`https://api.freesubdomains.org/lookup/domain?domain=${subdomain}.${domain}`);
+        const result = await axios.get(`https://free-domains-api.wdh.gg/lookup/domain?domain=${subdomain}.${domain}`);
 
         lookupRes = result.data;
     } catch(err) {
@@ -120,7 +120,7 @@ const fullContent = `{
         owner: "free-domains",
         repo: "register",
         title: `Update ${subdomain}.${domain}`,
-        body:  `Updated \`${subdomain}.${domain}\` using the [CLI](https://cli.freesubdomains.org).`,
+        body:  `Updated \`${subdomain}.${domain}\` using the [CLI](https://www.npmjs.com/package/@free-domains/cli).`,
         head: username + ":main",
         base: "main"
     })

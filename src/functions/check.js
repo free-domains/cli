@@ -12,7 +12,7 @@ module.exports = async function check() {
     let res;
 
     try {
-        const request = await axios.get(`https://api.freesubdomains.org/check?domain=${subdomain}.${domain}`);
+        const request = await axios.get(`https://free-domains-api.wdh.gg/check?domain=${subdomain}.${domain}`);
 
         res = request;
     } catch(err) {

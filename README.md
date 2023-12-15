@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://media.freesubdomains.org/cover.png">
+  <img src="https://free-domains.github.io/media/cover.png">
 </p>
 
 <h1 align="center">Free Domains CLI</h1>
