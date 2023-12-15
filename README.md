@@ -1,9 +1,5 @@
-<p align="center">
-  <img src="https://free-domains.github.io/media/cover.png">
-</p>
-
-<h1 align="center">Free Domains CLI</h1>
-<p align="center">Register a free subdomain with Free Domains using your command line.</p>
+# Free Domains CLI
+Register a free subdomain with Free Domains using your command line.
 
 ## Getting Started
 
